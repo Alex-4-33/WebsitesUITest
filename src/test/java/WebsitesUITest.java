@@ -151,16 +151,25 @@ WebsitesUITest {
         WebElement btn = driver.findElement(By.cssSelector("[type='submit']"));
         btn.click();
 
-        List<WebElement> listPrices = driver.findElementsByCssSelector("a.a2g0");
+        List<WebElement> listProducts = driver.findElementsByCssSelector("a.a2g0");
+        System.out.println(listProducts.toString());
+        List<WebElement> listPriceElements = driver.findElementsByCssSelector("span.c4v8");
+        List<Integer> listPrices = new ArrayList<Integer>();
 
+        for (WebElement item : listPriceElements) {
+            Integer price = 0;
+            //String tmp = item.getText();
+            String stringPrice = String.valueOf(item.getText().replaceAll("[^0-9]", ""));
+            price =  Integer.parseInt(stringPrice);
+            listPrices.add(price);
+        }
 
         System.out.println("\nСписок пылесосов дороже 5000 рублей:");
-        //for (WebElement item : listPrices) {
-           // if (parseInt(item.toString()) > 5000) {
-                //WebElement product = driver.findElementsByCssSelector("");
-                //System.out.println(product.getText());
-            //}
-        //}
+        for (int i = 0; i < listProducts.size(); i++) {
+            if (listPrices.get(i) > 5000) {
+                System.out.println(listProducts.get(i).getText());
+            }
+        }
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
