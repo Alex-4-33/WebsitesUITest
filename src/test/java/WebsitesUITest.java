@@ -147,11 +147,10 @@ WebsitesUITest {
         WebElement btn = driver.findElement(By.cssSelector("[type='submit']"));
         btn.click();
 
-        driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         // Same concept as in the Task3
         List<WebElement> listProducts = driver.findElementsByCssSelector("a.a2g0");
-        System.out.println(listProducts.toString());
         List<WebElement> listPriceElements = driver.findElementsByCssSelector("span.c4v8");
         List<Integer> listPrices = new ArrayList<Integer>();
 
