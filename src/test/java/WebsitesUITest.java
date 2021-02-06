@@ -1,8 +1,6 @@
+import com.sun.jna.platform.FileUtils;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -72,7 +70,7 @@ WebsitesUITest {
     @Test
     // selenium тест, который будет скачивать все картинки-логотипы каналов на главной странице youtube.com
     public void task2() throws IOException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Alex\\IdeaProjects\\chromedriver_win32\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Lenovo\\IdeaProjects\\chromedriver_win32\\chromedriver.exe");
         ChromeDriver driver = new ChromeDriver();
 
         String s;
@@ -98,26 +96,24 @@ WebsitesUITest {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Lenovo\\IdeaProjects\\chromedriver_win32\\chromedriver.exe");
         ChromeDriver driver = new ChromeDriver();
 
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-
-
-        //String s;
-        //System.out.println(driver.manage().window().getSize());
-        //Dimension dm = new Dimension(1920,1080);
-        //driver.manage().window().setSize(dm);
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("window-size=1920,1080");
-
-        DesiredCapabilities cap = DesiredCapabilities.chrome();
-        cap.setCapability(ChromeOptions.CAPABILITY, options);
+        // Zooming the page out, elements are not parsed for the 100% default zoom level
+        driver.get("chrome://settings/");
+        driver.executeScript("chrome.settingsPrivate.setDefaultZoom(0.5);");
 
         driver.get("https://www.wildberries.ru/");
 
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        // Finding all the products and placing the whole webelements to the list
         List<WebElement> listProducts = driver.findElementsByCssSelector("a.j-open-full-product-card");
+
+        // Finding all the corresponding prices to the other list of the same dimension
         List<WebElement> listPriceElements = driver.findElementsByCssSelector("div.price-now");
+
+        // Creation of the blank list for the integer prices
         List<Integer> listPrices = new ArrayList<Integer>();
 
+        // Prices parsing
         for (WebElement item : listPriceElements) {
             Integer price = 0;
             //String tmp = item.getText();
@@ -151,6 +147,9 @@ WebsitesUITest {
         WebElement btn = driver.findElement(By.cssSelector("[type='submit']"));
         btn.click();
 
+        driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
+
+        // Same concept as in the Task3
         List<WebElement> listProducts = driver.findElementsByCssSelector("a.a2g0");
         System.out.println(listProducts.toString());
         List<WebElement> listPriceElements = driver.findElementsByCssSelector("span.c4v8");
