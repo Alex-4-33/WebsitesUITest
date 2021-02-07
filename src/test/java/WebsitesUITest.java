@@ -69,20 +69,31 @@ WebsitesUITest {
 
     @Test
     // selenium тест, который будет скачивать все картинки-логотипы каналов на главной странице youtube.com
-    public void task2() throws IOException {
+    public void task2() throws IOException, InterruptedException {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Lenovo\\IdeaProjects\\chromedriver_win32\\chromedriver.exe");
         ChromeDriver driver = new ChromeDriver();
 
-        String s;
+        driver.get("chrome://settings/");
+        driver.executeScript("chrome.settingsPrivate.setDefaultZoom(0.5);");
+
         driver.get("https://www.youtube.com/");
 
-        List<WebElement> listImages = driver.findElementsByCssSelector("*#avatar");
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        //driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
+        //driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+        //Thread.sleep(1000);
 
-        for (WebElement item : listImages) {
-            BufferedImage bufferedImage = ImageIO.read(item.getScreenshotAs(OutputType.FILE));
-            File outputfile = new File("saved.png");
+        List<WebElement> listImages = driver.findElementsByCssSelector("*#avatar > #img");
+
+        for (int i = 0; i < listImages.size(); i++) {
+
+            String logoSrc = listImages.get(i).getAttribute("src");
+            //Thread.sleep(2500);
+            //System.out.println(logoSrc);
+            System.out.println("I="+ i);
+            BufferedImage bufferedImage = ImageIO.read(new URL(logoSrc));
+            File outputfile = new File( "logo" + i + ".png");
             ImageIO.write(bufferedImage, "png", outputfile);
-            //System.out.println(item.getText());
         }
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
